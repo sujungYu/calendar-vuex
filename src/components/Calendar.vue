@@ -14,21 +14,17 @@
         <tbody>
         <tr v-for="(date, idx) in dates" :key="idx">
           <td v-for="(day, index) in date" :key="index" :class="{
-                'selected-date': day === currentDate && isCurrentDate,
-                'prev-dates': isPrevDates(day, idx)
               }" v-on:click="clickDate(day)" class="pointer">
             <div>
               {{day}}
             </div>
             <div
-                class="markOnly w-full flex flex-row items-center justify-center"
                 v-if="getMatchedTodos(day).length > 0 && !isPrevDates(day, idx)"
               >
                 <div
-                  v-for="(todolist, idx) in getMatchedTodos(day)"
+                  v-for="(todo, idx) in getMatchedTodos(day)"
                   :key="idx"
-                  class="todo-dot text-primary-blue"
-                >{{todolist.todolist}}
+                >{{todo.title}}
                 </div>
                 </div>
           </td>
@@ -36,7 +32,7 @@
         </tbody>
         </table>
     </div>
-    <todo-list v-show="showModal" v-bind:open="showModal" v-bind:year="year" v-bind:month="month" v-bind:clickDay="clickDay" @close="showModal=false">
+    <todo-list v-show="showModal" v-bind:open="showModal" @close="showModal=false">
       <!-- <h3 slot="header"></h3> -->
     </todo-list>
   </div>
@@ -181,11 +177,9 @@ export default {
       this.init(param);
     },
     getMatchedTodos(day) {
-      return this.$store.state.todolists.filter(todolist => {
-        const todoDate = new Date(todolist.createdAt);
-        
+      return this.$store.state.todos.filter(todo => {
+        const todoDate = new Date(todo.createdAt);
         const isDateMatched = todoDate.getDate() === day;
-        console.log(this.isDateMatched);
         const isMonthMatched = todoDate.getMonth() === this.month - 1;
         const isYearMathced = todoDate.getFullYear() === this.year;
         return isDateMatched && isMonthMatched && isYearMathced;
@@ -198,7 +192,6 @@ export default {
       );
     },
     clickDate(day) {
-        // this.clickDay = day;
         this.showModal = !this.showModal;
         this.$store.commit('clickDate', {year: this.year, month: this.month, day: day})
     }

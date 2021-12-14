@@ -1,70 +1,58 @@
-// import axios from 'axios';
 import Vue from 'vue'
 import Vuex from 'vuex'
-// import router from '../router';
+import axios from 'axios';
 
 Vue.use(Vuex);
 
 const storage = {
     fetchUserTodo() {
-        const userTodo = localStorage.getItem("userTodos");
-        return userTodo != null ? JSON.parse(userTodo) : [];
-      },
-
-}
-
-export const store = new Vuex.Store({
+      const userTodo = localStorage.getItem("userTodos");
+      return userTodo != null ? JSON.parse(userTodo) : [];
+    },
+};
+    export const store = new Vuex.Store({
     state: {
-        // clickdate: null,
         year: '',
         month: '',
         day: '',
-        todolist: '',
-        // todolists: [],
-        todolists: storage.fetchUserTodo(),
+        todos: storage.fetchUserTodo(),
+        showtodos: []
 
     },
     mutations: {
         clickDate(state, payload) {
-            // state.clickdate = JSON.stringify(payload)
-            // console.log(state.clickdate);
             state.year = payload.year;
-            console.log(state.year);
             state.month = payload.month;
             state.day = payload.day;
         },
-        addTodoList(state, payload) {
-            state.todolists.push(payload);
-            localStorage.setItem("userTodos", JSON.stringify(state.todolists));
-            console.log(payload);
-        }
-        // todolist(state, payload) {
+        addNewTodo(state, todoItem) {
+            console.log(todoItem);
+            state.todos.push(todoItem);
+            localStorage.setItem("userTodos", JSON.stringify(state.todos));
+        },
 
-        // }
 
     },
-    // actions: {
-    //     todolist(state, payload) {
-    //         // console.log(payload.createdAt);
-    //         return axios.post(`${'http://localhost:8000'}/todolist`, {
-    //             todolist: payload.todolist,
-    //             clickdate: JSON.stringify({year: payload.year, month: payload.month, day: payload.day})
-    //         }).then((res) => {
-    //             state.todolist = res.data.todolist;
-                
-                
-    //             // console.log(state.todolist);
-    //             // commit('todolist', {todolist: res.data})
-    //         })
-            
-    //     }
+    actions: {
+        addTodo({ commit }, payload) {
+            return axios.post(`${'http://localhost:8000'}/todolist`, {
+                title: payload.title,
+                createdAt: payload.createdAt
+            }).then((res) => {
+                commit('addNewTodo', res.data);
+            })
+        }
 
-    // },
+
+    }, 
     getters: {
-        getTodolist(state) {
-            return state.todolists;
-           
+        showTodo: state => {
+            console.log(state.day);
+            console.log(state.year+"-"+state.month+"-"+state.day);
+            console.log(state.todos);
+            return state.todos.filter(todo => todo.createdAt == state.year+"-"+state.month+"-"+state.day)
         }
 
     }
+
 })

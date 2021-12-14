@@ -3,64 +3,58 @@
     <div class="overlay" @click="$emit('close')"></div>
     <div class="modal-card">
         <p>{{ this.$store.state.year }}년 {{ this.$store.state.month }}월 {{ this.$store.state.day }}일</p>
-        <input type="text" v-model="todolist">
-        <button  v-on:click="save">등록</button>
-        <!-- <ul>
-            <li v-for="todo in this.todolists"  v-bind:key="todo">
-                {{todo}}
-            </li>
-        </ul> -->
-      <!-- <slot /> -->
+        <input type="text" v-model="newTodo">
+        <button  v-on:click="addTodo">등록</button>
+        <ul>
+          <li v-for="(todo, index) in todo" :key="index">
+            {{todo.title}}
+          </li>
+        </ul>
     </div>
   </div>
 </template>
 
 <script>
-// import axios from 'axios';
 export default {
     data() {
         return {
-            todolist: '',
-            // year: '',
-            // month: '',
-            // day: ''
-            // todolists:[]
+            newTodo: '',
+            todos: [],
+            // year: this.$store.state.year,
+            // month: this.$store.state.month,
+            // day: this.$store.state.year,
+            // showTodo: []
         }
+    },
+    created() {
+        this.init();
     },
     computed: {
-        todolists() {
-            return this.$store.getters.getTodolist;
-        }
-
+      todo() {
+        return this.$store.getters.showTodo
+      }
     },
-    // mounted() {
-    //     this.date()
-    //     console.log("created");
-    // },
-    // props: ['showModal', 'year', 'month', 'clickDay'],
     methods: {
-        // date() {
-        //     this.year = this.$store.state.year,
-        //     console.log(this.year);
-        //     this.month = this.$store.state.month,
-        //     console.log(this.month);
-        //     this.day = this.$store.state.day
-
-        // },
-        save() {
-            this.$store.dispatch("todolist", {todolist:this.todolist, year: this.$store.state.year, month: this.$store.state.month, day: this.$store.state.day})
-            // this.$store.commit("addTodoList", {todolist:this.todolist, year: this.$store.state.year, month: this.$store.state.month, day: this.$store.state.day})
-            this.$store.commit("addTodoList", {todolist:this.todolist, createdAt: new Date()})
-            console.log(this.todolist);
-            this.clearInput();
+        init() {
+        this.todos = this.$store.state.todos || [];
         },
-        clearInput() {
-        this.todolist = '';
-    }
-        
+        addTodo() {
+            const todoItem = this.newTodo;
+            if (!todoItem) return;
 
-  },
-};
+            const newTodoItem = {
+                title: todoItem,
+                // isDone: false,
+                createdAt: this.$store.state.year+"-"+this.$store.state.month+"-"+this.$store.state.day
+            };
+            // this.$store.commit("addNewTodo", newTodoItem);
+            console.log();
+            this.$store.dispatch("addTodo", newTodoItem);
+            this.newTodo = "";
+        },
+    }
+
+}
 </script>
 
 <style>
