@@ -26,10 +26,14 @@ const storage = {
             state.day = payload.day;
         },
         addNewTodo(state, todoItem) {
-            console.log(todoItem);
+            // console.log(todoItem);
             state.todos.push(todoItem);
             localStorage.setItem("userTodos", JSON.stringify(state.todos));
         },
+        clearAll(state) {
+            localStorage.clear();
+            state.todos = [];
+            }
 
 
     },
@@ -41,15 +45,26 @@ const storage = {
             }).then((res) => {
                 commit('addNewTodo', res.data);
             })
+        },
+        getTodo({commit}) {
+            return axios.get(`${'http://localhost:8000'}/todolist`)
+            .then((res) => {
+                console.log(res.data);
+                let i;
+                for(i=0; i<res.data.length; i++) {
+                    commit('addNewTodo', res.data[i])
+                }
+            })
         }
 
 
     }, 
     getters: {
         showTodo: state => {
-            console.log(state.day);
-            console.log(state.year+"-"+state.month+"-"+state.day);
-            console.log(state.todos);
+            // console.log(state.day);
+
+            // console.log(state.year+"-"+state.month+"-"+state.day);
+            // console.log(state.todos);
             return state.todos.filter(todo => todo.createdAt == state.year+"-"+state.month+"-"+state.day)
         }
 

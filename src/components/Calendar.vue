@@ -1,9 +1,13 @@
 <template>
   <div>
-    <div>
+      <h1>
+      <i class="fas fa-arrow-left back" v-on:click="clearAll"></i>
+      offco
+      </h1>
+      <div class="border">
         <div class="header">
             <i class="fas fa-angle-left arrowLeft" v-on:click="controlMonth('prev')"></i>
-            <h1>{{year}}.{{month}}</h1>
+            <h2>{{year}}.{{month}}</h2>
             <i class="fas fa-angle-right arrowRight" v-on:click="controlMonth('next')"></i>
         </div>
         
@@ -15,9 +19,7 @@
         <tr v-for="(date, idx) in dates" :key="idx">
           <td v-for="(day, index) in date" :key="index" :class="{
               }" v-on:click="clickDate(day)" class="pointer">
-            <div>
               {{day}}
-            </div>
             <div
                 v-if="getMatchedTodos(day).length > 0 && !isPrevDates(day, idx)"
               >
@@ -35,6 +37,7 @@
     <todo-list v-show="showModal" v-bind:open="showModal" @close="showModal=false">
       <!-- <h3 slot="header"></h3> -->
     </todo-list>
+    <!-- <button v-on:click="clearAll">뒤로가기</button> -->
   </div>
 </template>
 
@@ -194,6 +197,10 @@ export default {
     clickDate(day) {
         this.showModal = !this.showModal;
         this.$store.commit('clickDate', {year: this.year, month: this.month, day: day})
+    },
+    clearAll() {
+      this.$store.commit('clearAll')
+
     }
   },
   
@@ -202,14 +209,42 @@ export default {
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Kite+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Gothic+A1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu&display=swap');
 div {
+    font-size: 10px;
     text-align: center;
     /* position: relative; */
     margin: 0 auto;
 }
 h1 {
+    display: inline-block;
+    font-family: 'Kite One', sans-serif;
+    font-weight: lighter;
+    background-color: rgb(255, 134, 94);;
+    color: white;
+    font-size: 3em;
+    width: 100vw;
+    height: 9.2vh;
+    margin: 0 auto;
+    padding-top: 0.1em;
+
+  }
+h2 {
     justify-content: center;
     text-align: center;
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 3em;
+    margin-top:0.3em;
+    color: rgb(28, 31, 34);
+}
+.border {
+  border: 1px solid rgb(162, 210, 255);
+  border-radius: 15px;
+  margin-top: 0.8em;
+  width: 93vw;
+  height: 87vh;
 }
 .header {
     position: relative;
@@ -220,33 +255,50 @@ h1 {
 .arrowLeft {
     position: absolute;
     justify-content: center;
-    left: 10px;
-    top: 10px
+    left: 10vw;
+    top: -0.4vh;
+    font-size: 4em;
+    color: rgb(28, 31, 34);
 }
 .arrowRight {
     position: absolute;
     justify-content: center;
-    right: 10px;
-    bottom: 10px
+    right: 10vw;
+    bottom: -0.5vh;
+    font-size: 4em;
+    color: rgb(28, 31, 34);
+}
+.back {
+  left: 6vw;
+  top: 2.5vh;
+  position: absolute;
 }
 table {
   margin: 0 auto;
   text-align: center;
   border-collapse: collapse;
-  width: 400px;
-  height: 500px;
+  width: 90vw;
+  height: 73.5vh;
+  font-family: 'Gothic A1', sans-serif;
+  font-size: 1.25em;
+   /* border-bottom: 1px solid rgba(28, 31, 34, 0.5); */
   /* border-spacing: 20px 30px; */
 }
 th {
-  border-bottom: 1px solid;
-  /* background-color: ; */
-  /* vertical-align: top; */
+  border-bottom: 0.5px solid rgba(86, 112, 138, 0.5);
 }
+
  td {
-  border-bottom: 1px solid;
+  border-bottom: 0.5px solid rgba(28, 31, 34, 0.5);
   /* padding: 20px;
   font-size: 20px; */
   vertical-align: top;
+}
+th:nth-child(1) {
+  color: rgb(255, 36, 66);
+}
+th:nth-child(7) {
+  color: rgb(61, 178, 255)
 }
   .pointer {
     cursor: pointer;
